@@ -1,9 +1,9 @@
 package com.jstien.displed.particle;
 
 import com.badlogic.gdx.math.Vector2;
-import com.jstien.displed.PixelBuffer;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class ParticleSystem {
     private class IntermediatePixel {
@@ -79,11 +79,9 @@ public class ParticleSystem {
         }
     }
 
-    public void render(PixelBuffer pixelBuffer) {
-        pixelBuffer.clear();
-
-        final int width = pixelBuffer.getWidth();
-        final int height = pixelBuffer.getHeight();
+    public void render(BufferedImage image) {
+        final int width = image.getWidth();
+        final int height = image.getHeight();
         allocateIntermediatesIfNeeded(width * height);
 
         for (int i=0; i<width*height; i++)
@@ -111,7 +109,7 @@ public class ParticleSystem {
                 Math.min(255, intermediatePixels[i].b),
                 Math.min(255, intermediatePixels[i].a)
             );
-            pixelBuffer.setPixel(x, y, color);
+            image.setRGB(x, y, color.getRGB());
         }
     }
 

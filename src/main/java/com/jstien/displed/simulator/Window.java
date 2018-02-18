@@ -1,9 +1,6 @@
 package com.jstien.displed.simulator;
 
-import com.jstien.displed.PixelBuffer;
-
 import javax.swing.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Window {
@@ -11,20 +8,20 @@ public class Window {
 
     private JFrame frame;
     private SimulatorCanvas canvas;
-    private PixelBuffer pixelBuffer;
+    private BufferedImage image;
 
 
-    public Window(PixelBuffer pixelBuffer) {
-        this.pixelBuffer = pixelBuffer;
+    public Window(BufferedImage image) {
+        this.image = image;
 
-        final int width = pixelBuffer.getWidth() * SCALE;
-        final int height = pixelBuffer.getHeight() * SCALE;
+        final int width = image.getWidth() * SCALE;
+        final int height = image.getHeight() * SCALE;
 
         frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(width, height);
 
-        canvas = new SimulatorCanvas(this.pixelBuffer, SCALE);
+        canvas = new SimulatorCanvas(this.image, SCALE);
         canvas.setSize(width, height);
         frame.getContentPane().add(canvas);
 

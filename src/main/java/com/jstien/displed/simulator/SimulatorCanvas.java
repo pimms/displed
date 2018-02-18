@@ -1,29 +1,28 @@
 package com.jstien.displed.simulator;
 
-import com.jstien.displed.PixelBuffer;
-
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class SimulatorCanvas extends Canvas {
-    private PixelBuffer pixelBuffer;
+    private BufferedImage image;
     private int pixelScale;
 
-    public SimulatorCanvas(PixelBuffer pixelBuffer, int pixelScale) {
-        this.pixelBuffer = pixelBuffer;
+    public SimulatorCanvas(BufferedImage image, int pixelScale) {
+        this.image = image;
         this.pixelScale = pixelScale;
     }
 
     @Override
     public void paint(Graphics g) {
         g.setColor(Color.BLACK);
-        g.fillRect(0, 0, pixelScale * pixelBuffer.getWidth(), pixelScale * pixelBuffer.getHeight());
+        g.fillRect(0, 0, pixelScale * image.getWidth(), pixelScale * image.getHeight());
 
-        for (int y=0; y<this.pixelBuffer.getHeight(); y++) {
-            for (int x=0; x<this.pixelBuffer.getWidth(); x++ ){
+        for (int y=0; y<image.getHeight(); y++) {
+            for (int x=0; x<image.getWidth(); x++ ){
                 int realX = x * pixelScale;
                 int realY = y * pixelScale;
 
-                g.setColor(pixelBuffer.getColor(x, y));
+                g.setColor(new Color(image.getRGB(x, y)));
                 g.fillRect(realX + 1, realY + 1, pixelScale - 2, pixelScale - 2);
             }
         }
