@@ -6,17 +6,22 @@ import com.jstien.displed.PixelBuffer;
 import java.awt.*;
 
 public class ParticleSystem {
-    private float boundX;
-    private float boundY;
-    private Particle[] particles;
-
-
     private class IntermediatePixel {
         int r;
         int g;
         int b;
         int a;
+
+        public void clear() {
+            r = g = b = a = 0;
+        }
     }
+
+    private float boundX;
+    private float boundY;
+    private Particle[] particles;
+
+    private IntermediatePixel[] intermediatePixels;
 
     public ParticleSystem(int boundX, int boundY, int numParticles) {
         this.boundX = (float)boundX;
@@ -36,7 +41,7 @@ public class ParticleSystem {
 
 
     public void temp_reorganize() {
-        float size = 10f;
+        float size = 5f;
 
         float squareCount = (float)Math.sqrt(particles.length);
         float step = size / squareCount;
@@ -48,8 +53,8 @@ public class ParticleSystem {
         for (float i=0f; i<squareCount; i+=step) {
             for (float j=0f; j<squareCount && index < particles.length; j+=step) {
                 Particle part = particles[index++];
-                part.target.x = x + i;
-                part.target.y = y + j;
+                part.target.x = x + j;
+                part.target.y = y + i;
             }
         }
         System.out.printf("Updated %d particles\n", index);
@@ -79,35 +84,43 @@ public class ParticleSystem {
 
         final int width = pixelBuffer.getWidth();
         final int height = pixelBuffer.getHeight();
+        allocateIntermediatesIfNeeded(width * height);
 
-        IntermediatePixel[] intermediate = new IntermediatePixel[width * height];
         for (int i=0; i<width*height; i++)
-            intermediate[i] = new IntermediatePixel();
+            intermediatePixels[i].clear();
 
         for (Particle part: particles) {
             int x = (int)part.position.x;
             int y = (int)part.position.y;
             int index = y*width + x;
-            if (index >= 0 && index < intermediate.length) {
-                intermediate[index].r += part.color.getRed();
-                intermediate[index].g += part.color.getGreen();
-                intermediate[index].b += part.color.getBlue();
-                intermediate[index].a += part.color.getAlpha();
+            if (index >= 0 && index < intermediatePixels.length) {
+                intermediatePixels[index].r += part.color.getRed();
+                intermediatePixels[index].g += part.color.getGreen();
+                intermediatePixels[index].b += part.color.getBlue();
+                intermediatePixels[index].a += part.color.getAlpha();
             }
         }
 
-        for (int i=0; i<intermediate.length; i++) {
+        for (int i=0; i<intermediatePixels.length; i++) {
             int x = i % width;
             int y = i / width;
 
             Color color = new Color(
-                Math.min(255, intermediate[i].r),
-                Math.min(255, intermediate[i].g),
-                Math.min(255, intermediate[i].b),
-                Math.min(255, intermediate[i].a)
+                Math.min(255, intermediatePixels[i].r),
+                Math.min(255, intermediatePixels[i].g),
+                Math.min(255, intermediatePixels[i].b),
+                Math.min(255, intermediatePixels[i].a)
             );
             pixelBuffer.setPixel(x, y, color);
         }
     }
 
+    private void allocateIntermediatesIfNeeded(int count) {
+        if (intermediatePixels == null || intermediatePixels.length != count) {
+            intermediatePixels = new IntermediatePixel[count];
+            for (int i=0; i<count; i++) {
+                intermediatePixels[i] = new IntermediatePixel();
+            }
+        }
+    }
 }
