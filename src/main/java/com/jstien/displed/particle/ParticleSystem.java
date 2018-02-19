@@ -17,15 +17,15 @@ public class ParticleSystem {
         }
     }
 
-    private float boundX;
-    private float boundY;
+    private int boundX;
+    private int boundY;
     private Particle[] particles;
 
     private IntermediatePixel[] intermediatePixels;
 
     public ParticleSystem(int boundX, int boundY, int numParticles) {
-        this.boundX = (float)boundX;
-        this.boundY = (float)boundY;
+        this.boundX = boundX;
+        this.boundY = boundY;
 
         particles = new Particle[numParticles];
         for (int i=0; i<numParticles; i++)
@@ -39,25 +39,13 @@ public class ParticleSystem {
         return particle;
     }
 
+    public void adjustTargetTo(BufferedImage target) {
+        DistributionPlanner planner = new DistributionPlanner(boundX, boundY);
 
-    public void temp_reorganize() {
-        float size = 5f;
+        // TODO: This is probably a really slow way of doing this..
+        int width = target.getWidth();
+        int height = target.getHeight();
 
-        float squareCount = (float)Math.sqrt(particles.length);
-        float step = size / squareCount;
-
-        float x = boundX/2f - size/2f;
-        float y = boundY/2f - size/2f;
-
-        int index = 0;
-        for (float i=0f; i<squareCount; i+=step) {
-            for (float j=0f; j<squareCount && index < particles.length; j+=step) {
-                Particle part = particles[index++];
-                part.target.x = x + j;
-                part.target.y = y + i;
-            }
-        }
-        System.out.printf("Updated %d particles\n", index);
     }
 
     public void update() {
@@ -121,4 +109,5 @@ public class ParticleSystem {
             }
         }
     }
+
 }

@@ -10,16 +10,16 @@ import java.net.URL;
 
 public class Main {
     public static void main(String[] args) {
-        BufferedImage image = new BufferedImage(64, 32, BufferedImage.TYPE_3BYTE_BGR);
+        BufferedImage image = new BufferedImage(64, 32, BufferedImage.TYPE_INT_ARGB);
 
         ParticleSystem particleSystem = new ParticleSystem(64, 32, 5000);
 
         Window window = new Window(image);
-        particleSystem.temp_reorganize();
 
         try {
             URL url = new URL("http://www.pngmart.com/files/3/Play-Button-Transparent-Background.png");
             BufferedImage target = ImageIO.read(url);
+            particleSystem.adjustTargetTo(target);
         } catch (Exception ex) {
             System.out.println("Failed to get URL: " + ex);
         }
