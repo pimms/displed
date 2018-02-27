@@ -1,7 +1,5 @@
 package com.jstien.displed.particle;
 
-import com.badlogic.gdx.math.Vector2;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -58,7 +56,7 @@ public class ParticleSystem {
             float len = delta.len();
             if (len > 0.01f) {
                 float distToMove = Math.min(len, maxdist);
-                delta = delta.nor();
+                delta.nor();
                 delta.x *= distToMove;
                 delta.y *= distToMove;
                 part.position.add(delta);

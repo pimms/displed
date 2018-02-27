@@ -24,24 +24,16 @@ public class Main {
             System.out.println("Failed to get URL: " + ex);
         }
 
+        JNRTest test = new JNRTest();
+
         while (true) {
+            test.PutString("loop start");
             particleSystem.update();
             particleSystem.render(image);
             window.repaint();
+            test.Print("loop done");
             try { Thread.sleep(32); } catch (Exception e) {}
         }
     }
 
-    public static String LongestWord(String sen) {
-        String[] words = sen.split("([^a-zA-Z])");
-
-        String longest = words[0];
-        for (int i=1; i<words.length; i++) {
-            if (words[i].length() > longest.length()) {
-                longest = words[i];
-            }
-        }
-
-        return longest;
-    }
 }

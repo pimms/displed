@@ -1,7 +1,5 @@
 package com.jstien.displed.particle;
 
-import com.badlogic.gdx.math.Vector2;
-
 import java.awt.*;
 
 public class Particle {

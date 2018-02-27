@@ -14,11 +14,6 @@ public class DistributionPlanner {
         height = maxH;
     }
 
-    public DistributionPlan createDistribution(BufferedImage image) {
-        BufferedImage scaled = scaleToFit(image);
-        throw new NotImplementedException();
-    }
-
     private BufferedImage scaleToFit(BufferedImage img) {
         int imgWidth = img.getWidth();
         int imgHeight = img.getHeight();
