@@ -1,5 +1,6 @@
 package com.jstien.displed.display.rgbled;
 
+import com.jstien.displed.display.Configuration;
 import com.jstien.displed.display.IDisplay;
 import jnr.ffi.LibraryLoader;
 import jnr.ffi.Pointer;
@@ -7,7 +8,7 @@ import jnr.ffi.types.u_int8_t;
 
 import java.awt.*;
 
-public class RgbMatrix implements AutoCloseable, IDisplay {
+public class RgbMatrixDisplay implements IDisplay {
     public static interface NativeInterface {
         Pointer led_matrix_create_single(int rows, int cols, String gpio_map);
         Pointer led_matrix_create_offscreen_canvas(Pointer matrix);
@@ -29,13 +30,12 @@ public class RgbMatrix implements AutoCloseable, IDisplay {
         }
     }
 
-    public RgbMatrix() {
+    public RgbMatrixDisplay(Configuration config) {
         nativeInterface = LibraryLoader.create(NativeInterface.class).load("rgbmatrix");
 
-        // TODO: Make this configurable. This only supports my setup as-is.
-        width = 64;
-        height = 32;
-        String gpioMapping = "adafruit-hat";
+        width = config.getWidth();
+        height = config.getHeight();
+        String gpioMapping = config.getGpioMapping();
         matrix = nativeInterface.led_matrix_create_single(height, width, gpioMapping);
         if (isNull(matrix)) {
             throw new NativeRgbException("Failed to initialize native RGB Matrix");
@@ -44,16 +44,6 @@ public class RgbMatrix implements AutoCloseable, IDisplay {
         canvas = nativeInterface.led_matrix_create_offscreen_canvas(matrix);
         if (isNull(canvas)) {
             throw new NativeRgbException("Failed to create a canvas");
-        }
-    }
-
-
-    @Override
-    public void close() {
-        if (!isNull(matrix)) {
-            nativeInterface.led_matrix_delete(matrix);
-            matrix = null;
-            canvas = null;
         }
     }
 
@@ -91,6 +81,15 @@ public class RgbMatrix implements AutoCloseable, IDisplay {
     @Override
     public int getHeight() {
         return height;
+    }
+
+    @Override
+    public void close() {
+        if (!isNull(matrix)) {
+            nativeInterface.led_matrix_delete(matrix);
+            matrix = null;
+            canvas = null;
+        }
     }
 
 
