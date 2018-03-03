@@ -5,10 +5,14 @@ import com.jstien.displed.display.IDisplay;
 import jnr.ffi.LibraryLoader;
 import jnr.ffi.Pointer;
 import jnr.ffi.types.u_int8_t;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
 
 public class RgbMatrixDisplay implements IDisplay {
+    Logger LOG = LogManager.getLogger(RgbMatrixDisplay.class);
+
     public static interface NativeInterface {
         Pointer led_matrix_create_single(int rows, int cols, String gpio_map);
         Pointer led_matrix_create_offscreen_canvas(Pointer matrix);
@@ -49,17 +53,6 @@ public class RgbMatrixDisplay implements IDisplay {
 
 
     @Override
-    public void clear() {
-        // The native implementations in rgb-led-matrix seems to be
-        // column-major, so iterate through the pixels in the same order.
-        for (int x=0; x<width; x++) {
-            for (int y=0; y<height; y++) {
-                setPixel(x, y, Color.black);
-            }
-        }
-    }
-
-    @Override
     public void setPixel(int x, int y, Color color) {
         char r = (char)color.getRed();
         char g = (char)color.getGreen();
@@ -86,6 +79,7 @@ public class RgbMatrixDisplay implements IDisplay {
     @Override
     public void close() {
         if (!isNull(matrix)) {
+            LOG.info("Properly closing RGB Display handle");
             nativeInterface.led_matrix_delete(matrix);
             matrix = null;
             canvas = null;

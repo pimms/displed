@@ -1,5 +1,7 @@
 package com.jstien.displed.particle;
 
+import com.jstien.displed.display.DisplayRenderer;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -35,15 +37,6 @@ public class ParticleSystem {
         float y = (float)Math.random() * boundY;
         Particle particle = new Particle(x, y);
         return particle;
-    }
-
-    public void adjustTargetTo(BufferedImage target) {
-        DistributionPlanner planner = new DistributionPlanner(boundX, boundY);
-
-        // TODO: This is probably a really slow way of doing this..
-        int width = target.getWidth();
-        int height = target.getHeight();
-
     }
 
     public void update() {

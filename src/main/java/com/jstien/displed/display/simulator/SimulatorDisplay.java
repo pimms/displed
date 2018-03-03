@@ -47,18 +47,6 @@ public class SimulatorDisplay implements IDisplay {
     }
 
     @Override
-    public void clear() {
-        final int w = getWidth();
-        final int h = getHeight();
-        Color c = Color.black;
-        for (int y=0; y<h; y++) {
-            for (int x=0; x<w; x++) {
-                setPixel(x, y, c);
-            }
-        }
-    }
-
-    @Override
     public void setPixel(int x, int y, Color color) {
         image.setRGB(x, y, color.getRGB());
     }

@@ -1,34 +1,55 @@
 package com.jstien.displed;
 
 import com.jstien.displed.display.Configuration;
+import com.jstien.displed.display.DisplayRenderer;
 import com.jstien.displed.display.IDisplay;
 import com.jstien.displed.display.rgbled.RgbMatrixDisplay;
 import com.jstien.displed.display.simulator.SimulatorDisplay;
-import com.sun.deploy.Environment;
 
 import java.awt.*;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import sun.awt.Mutex;
+import sun.misc.Signal;
+import sun.misc.SignalHandler;
+
 public class Main {
+    private static final Logger LOG = LogManager.getLogger(Main.class);
+
     public static void main(String[] args) {
         Configuration config = new Configuration(64, 32, "adafruit-hat");
         IDisplay display = createDisplay(config);
 
-        try {
-            runApplication(display);
-        } catch (Exception ex) {
-            System.out.println("Application raised unexpected exception: " + ex);
-        } finally {
-            onApplicationExit(display);
-        }
+        Thread appThread = new Thread(() -> {
+            try {
+                runApplication(display);
+            } catch (Exception ex) {
+                LOG.error("Application raised unexpected exception", ex);
+            }
+        });
+        appThread.start();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            LOG.debug("ShutdownHook - begin. Joining appThread...");
+            try {
+                appThread.stop();
+                onApplicationExit(display);
+            } catch (Exception ex) {
+                LOG.error("ShutdownHook - thread join exception", ex);
+            }
+        }));
     }
 
     private static IDisplay createDisplay(Configuration config) {
         IDisplay display = null;
 
-        if (Environment.getenv("SIMULATOR").equals("1")) {
-            display = new SimulatorDisplay(config);
-        } else {
+        if (System.getenv("SIMULATOR") == null) {
+            LOG.info("Using RgbMatrixDisplay");
             display = new RgbMatrixDisplay(config);
+        } else {
+            LOG.info("Using SimulatorDisplay");
+            display = new SimulatorDisplay(config);
         }
 
         return display;
@@ -36,26 +57,14 @@ public class Main {
 
     private static void runApplication(IDisplay display) throws Exception {
         try {
-            final int width = display.getWidth();
-            final int height = display.getHeight();
-
-            for (int x=0; x<width*3000; x++) {
-                int prevX = (x % width) - 1;
-                if (prevX < 0)
-                    prevX += width;
-
-                for (int y = 0; y < height; y++) {
-                    display.setPixel(prevX, y, Color.black);
-                    display.setPixel((x + 0) % width, y, Color.red);
-                    display.setPixel((x + 1) % width, y, Color.white);
-                    display.setPixel((x + 2) % width, y, Color.blue);
-                    display.setPixel((x + 3) % width, y, Color.white);
-                    display.setPixel((x + 4) % width, y, Color.red);
-                }
-                display.swapBuffers();
-            }
+            DisplayRenderer renderer = new DisplayRenderer(display);
+            renderer.setClearColor(Color.white);
+            renderer.clear();
+            renderer.displayImage("http://i0.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg");
+            display.swapBuffers();
+            Thread.sleep(5000);
         } catch (Exception ex) {
-            System.out.println("Exception caught: " + ex.toString());
+            LOG.error("Exception caught during application run", ex);
         }
     }
 
@@ -63,7 +72,7 @@ public class Main {
         try {
             display.close();
         } catch (Exception e) {
-            System.out.println("Closing display failed: " + e);
+            LOG.error("Closing display failed", e);
         }
     }
 
