@@ -5,7 +5,7 @@ import java.awt.*;
 public interface IDisplay extends AutoCloseable {
     void clear();
     void setPixel(int x, int y, Color color);
-    void visualizeFrame();
+    void swapBuffers();
     int getWidth();
     int getHeight();
 }

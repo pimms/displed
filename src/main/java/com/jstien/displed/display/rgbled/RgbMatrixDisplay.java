@@ -69,7 +69,7 @@ public class RgbMatrixDisplay implements IDisplay {
     }
 
     @Override
-    public void visualizeFrame() {
+    public void swapBuffers() {
         swapBuffer();
     }
 

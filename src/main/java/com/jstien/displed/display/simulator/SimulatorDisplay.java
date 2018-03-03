@@ -64,7 +64,7 @@ public class SimulatorDisplay implements IDisplay {
     }
 
     @Override
-    public void visualizeFrame() {
+    public void swapBuffers() {
         canvas.repaint();
 
         // Simulate v-sync. I believe the physical display

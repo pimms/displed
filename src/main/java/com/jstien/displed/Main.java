@@ -5,7 +5,6 @@ import com.jstien.displed.display.IDisplay;
 import com.jstien.displed.display.rgbled.RgbMatrixDisplay;
 import com.jstien.displed.display.simulator.SimulatorDisplay;
 import com.sun.deploy.Environment;
-import sun.awt.Mutex;
 
 import java.awt.*;
 
@@ -53,7 +52,7 @@ public class Main {
                     display.setPixel((x + 3) % width, y, Color.white);
                     display.setPixel((x + 4) % width, y, Color.red);
                 }
-                display.visualizeFrame();
+                display.swapBuffers();
             }
         } catch (Exception ex) {
             System.out.println("Exception caught: " + ex.toString());
