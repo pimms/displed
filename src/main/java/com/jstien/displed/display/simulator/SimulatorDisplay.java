@@ -2,11 +2,11 @@ package com.jstien.displed.display.simulator;
 
 import com.jstien.displed.display.Configuration;
 import com.jstien.displed.display.IDisplay;
-import com.sun.javafx.iio.ImageStorage;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 
 public class SimulatorDisplay implements IDisplay {
@@ -44,11 +44,26 @@ public class SimulatorDisplay implements IDisplay {
         frame.pack();
         frame.setResizable(false);
         frame.setVisible(true);
+
+        frame.addWindowListener(new WindowListener() {
+            public void windowClosing(WindowEvent e) { frame = null; }
+            public void windowOpened(WindowEvent e) { }
+            public void windowClosed(WindowEvent e) { }
+            public void windowIconified(WindowEvent e) { }
+            public void windowDeiconified(WindowEvent e) { }
+            public void windowActivated(WindowEvent e) { }
+            public void windowDeactivated(WindowEvent e) { }
+        });
     }
 
     @Override
     public void setPixel(int x, int y, Color color) {
         image.setRGB(x, y, color.getRGB());
+    }
+
+    @Override
+    public void setPixel(int x, int y, int r, int g, int b) {
+        setPixel(x, y, new Color(r, g, b));
     }
 
     @Override

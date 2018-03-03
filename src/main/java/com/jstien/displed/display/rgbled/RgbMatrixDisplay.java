@@ -58,7 +58,12 @@ public class RgbMatrixDisplay implements IDisplay {
         char g = (char)color.getGreen();
         char b = (char)color.getBlue();
 
-        nativeInterface.led_canvas_set_pixel(canvas, x, y, r, g, b);
+        setPixel(x, y, r, g, b);
+    }
+
+    @Override
+    public void setPixel(int x, int y, int r, int g, int b) {
+        nativeInterface.led_canvas_set_pixel(canvas, x, y, (char)r, (char)g, (char)b);
     }
 
     @Override

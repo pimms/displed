@@ -38,6 +38,17 @@ public class Vector2 {
         return (float)Math.sqrt(dsquare);
     }
 
+    public float distanceTo(Vector2 other) {
+        return distanceTo(other.x, other.y);
+    }
+
+    public float distanceTo(float xx, float yy) {
+        double dx = xx - this.x;
+        double dy = yy - this.y;
+        double dsquare = dx*dx + dy*dy;
+        return (float)Math.sqrt(dsquare);
+    }
+
     public void nor() {
         float len = len();
         x /= len;

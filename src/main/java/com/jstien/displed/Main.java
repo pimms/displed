@@ -1,21 +1,17 @@
 package com.jstien.displed;
 
 import com.jstien.displed.display.Configuration;
-import com.jstien.displed.display.DisplayRenderer;
 import com.jstien.displed.display.IDisplay;
 import com.jstien.displed.display.rgbled.RgbMatrixDisplay;
 import com.jstien.displed.display.simulator.SimulatorDisplay;
-
-import java.awt.*;
-
+import com.jstien.displed.particle.BinaryMap;
+import com.jstien.displed.particle.ParticleSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import sun.awt.Mutex;
-import sun.misc.Signal;
-import sun.misc.SignalHandler;
 
 public class Main {
     private static final Logger LOG = LogManager.getLogger(Main.class);
+    private static boolean exiting = false;
 
     public static void main(String[] args) {
         Configuration config = new Configuration(64, 32, "adafruit-hat");
@@ -28,16 +24,22 @@ public class Main {
                 LOG.error("Application raised unexpected exception", ex);
             }
         });
+        appThread.setName("appThread");
         appThread.start();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            LOG.debug("ShutdownHook - begin. Joining appThread...");
+            LOG.debug("ShutdownHook - begin");
+            LOG.debug("ShutdownHook - stopping appThread...");
             try {
-                appThread.stop();
+                exiting = true;
+                appThread.join();
+                LOG.debug("ShutdownHook - appThread joined");
                 onApplicationExit(display);
             } catch (Exception ex) {
                 LOG.error("ShutdownHook - thread join exception", ex);
             }
+
+            LOG.debug("ShutdownHook - completed");
         }));
     }
 
@@ -57,12 +59,20 @@ public class Main {
 
     private static void runApplication(IDisplay display) throws Exception {
         try {
-            DisplayRenderer renderer = new DisplayRenderer(display);
-            renderer.setClearColor(Color.white);
-            renderer.clear();
-            renderer.displayImage("http://i0.kym-cdn.com/entries/icons/original/000/001/030/DButt.jpg");
-            display.swapBuffers();
-            Thread.sleep(5000);
+            ParticleSystem system = new ParticleSystem(display);
+
+            BinaryMap map = new BinaryMap(64, 32);
+            for (int y=0; y<10; y++)
+                for (int x=0; x<10; x++)
+                    map.set(x+27, y+11, true);
+
+            system.transitionTo(map);
+
+            while (!exiting) {
+                system.update();
+                system.render();
+                display.swapBuffers();
+            }
         } catch (Exception ex) {
             LOG.error("Exception caught during application run", ex);
         }
