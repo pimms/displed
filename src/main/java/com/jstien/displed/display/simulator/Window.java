@@ -1,4 +1,4 @@
-package com.jstien.displed.simulator;
+package com.jstien.displed.display.simulator;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;

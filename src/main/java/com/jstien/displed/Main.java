@@ -1,14 +1,9 @@
 package com.jstien.displed;
 
-import com.jstien.displed.particle.ParticleSystem;
-import com.jstien.displed.rgbled.RgbMatrix;
-import com.jstien.displed.simulator.Window;
+import com.jstien.displed.display.rgbled.RgbMatrix;
 import sun.awt.Mutex;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.net.URL;
 
 public class Main {
     public static void main(String[] args) {

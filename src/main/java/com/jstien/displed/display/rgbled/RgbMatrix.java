@@ -1,13 +1,13 @@
-package com.jstien.displed.rgbled;
+package com.jstien.displed.display.rgbled;
 
+import com.jstien.displed.display.IDisplay;
 import jnr.ffi.LibraryLoader;
 import jnr.ffi.Pointer;
-import jnr.ffi.types.size_t;
 import jnr.ffi.types.u_int8_t;
 
 import java.awt.*;
 
-public class RgbMatrix implements AutoCloseable {
+public class RgbMatrix implements AutoCloseable, IDisplay {
     public static interface NativeInterface {
         Pointer led_matrix_create_single(int rows, int cols, String gpio_map);
         Pointer led_matrix_create_offscreen_canvas(Pointer matrix);
@@ -48,14 +48,17 @@ public class RgbMatrix implements AutoCloseable {
     }
 
 
-    public void setPixel(int x, int y, Color color) {
-        char r = (char)color.getRed();
-        char g = (char)color.getGreen();
-        char b = (char)color.getBlue();
-
-        nativeInterface.led_canvas_set_pixel(canvas, x, y, r, g, b);
+    @Override
+    public void close() {
+        if (!isNull(matrix)) {
+            nativeInterface.led_matrix_delete(matrix);
+            matrix = null;
+            canvas = null;
+        }
     }
 
+
+    @Override
     public void clear() {
         // The native implementations in rgb-led-matrix seems to be
         // column-major, so iterate through the pixels in the same order.
@@ -66,27 +69,35 @@ public class RgbMatrix implements AutoCloseable {
         }
     }
 
-    public void swapBuffer() {
-        canvas = nativeInterface.led_matrix_swap_on_vsync(matrix, canvas);
-        if (isNull(canvas)) {
-            throw new NativeRgbException("Canvas swap returned null");
-        }
+    @Override
+    public void setPixel(int x, int y, Color color) {
+        char r = (char)color.getRed();
+        char g = (char)color.getGreen();
+        char b = (char)color.getBlue();
+
+        nativeInterface.led_canvas_set_pixel(canvas, x, y, r, g, b);
     }
 
+    @Override
+    public void visualizeFrame() {
+        swapBuffer();
+    }
 
+    @Override
     public int getWidth() {
         return width;
     }
 
+    @Override
     public int getHeight() {
         return height;
     }
 
-    public void close() {
-        if (!isNull(matrix)) {
-            nativeInterface.led_matrix_delete(matrix);
-            matrix = null;
-            canvas = null;
+
+    private void swapBuffer() {
+        canvas = nativeInterface.led_matrix_swap_on_vsync(matrix, canvas);
+        if (isNull(canvas)) {
+            throw new NativeRgbException("Canvas swap returned null");
         }
     }
 

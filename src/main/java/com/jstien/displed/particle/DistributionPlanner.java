@@ -1,7 +1,5 @@
 package com.jstien.displed.particle;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
