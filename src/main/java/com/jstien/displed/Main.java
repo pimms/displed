@@ -4,7 +4,6 @@ import com.jstien.displed.display.Configuration;
 import com.jstien.displed.display.IDisplay;
 import com.jstien.displed.display.rgbled.RgbMatrixDisplay;
 import com.jstien.displed.display.simulator.SimulatorDisplay;
-import com.jstien.displed.particle.BinaryMap;
 import com.jstien.displed.particle.ParticleSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

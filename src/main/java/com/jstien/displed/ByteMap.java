@@ -1,4 +1,4 @@
-package com.jstien.displed.particle;
+package com.jstien.displed;
 
 import java.awt.*;
 import java.util.ArrayList;

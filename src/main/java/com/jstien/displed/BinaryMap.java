@@ -1,6 +1,7 @@
-package com.jstien.displed.particle;
+package com.jstien.displed;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class BinaryMap {
     private int width;
@@ -45,7 +46,7 @@ public class BinaryMap {
         map[getIndex(x, y)] = flag;
     }
 
-    public Iterable<Tuple> getFlagged() {
+    public List<Tuple> getFlagged() {
         LinkedList<Tuple> flagged = new LinkedList<>();
         int index = 0;
         for (int y=0; y<height; y++) {

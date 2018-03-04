@@ -1,5 +1,7 @@
 package com.jstien.displed.particle;
 
+import com.jstien.displed.BinaryMap;
+import com.jstien.displed.ByteMap;
 import com.jstien.displed.display.IDisplay;
 
 import java.util.ArrayList;
