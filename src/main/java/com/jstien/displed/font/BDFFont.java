@@ -4,21 +4,20 @@ import com.sun.media.sound.InvalidFormatException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
 public class BDFFont {
-    Logger LOG = LogManager.getLogger(BDFFont.class);
+    private static final Logger LOG = LogManager.getLogger(BDFFont.class);
 
     private int baseLine;
     private int fontHeight;
 
     private Map<Integer,Glyph> glyphs = new HashMap<>();
 
-    public BDFFont(String filePath) throws FileNotFoundException, InvalidFormatException {
+    public BDFFont(String filePath) throws InvalidFormatException {
         InputStream stream = this.getClass().getClassLoader().getResourceAsStream(filePath);
         Scanner scanner = new Scanner(stream);
 
@@ -32,7 +31,6 @@ public class BDFFont {
             } else if (scanner.hasNext("STARTCHAR")) {
                 Glyph glyph = new Glyph(scanner);
                 glyphs.put(glyph.getCodePoint(), glyph);
-                LOG.debug("Parsed glyph '"+glyph.getName()+"'");
             } else {
                 scanner.nextLine();
             }
@@ -40,6 +38,8 @@ public class BDFFont {
     }
 
     public Glyph getGlyph(int charCode) {
+        if (!glyphs.containsKey(charCode))
+            return glyphs.get('?');
         return glyphs.get(charCode);
     }
 

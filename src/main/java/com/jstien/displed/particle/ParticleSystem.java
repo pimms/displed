@@ -30,7 +30,7 @@ public class ParticleSystem {
 
     public void update() {
         for (Particle p : particles) {
-            p.moveToTarget(0.1f);
+            p.moveToTarget(0.05f);
         }
     }
 

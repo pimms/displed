@@ -2,7 +2,6 @@ package com.jstien.displed.font;
 
 import com.jstien.displed.BinaryMap;
 import com.sun.media.sound.InvalidFormatException;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import java.util.Scanner;
 
@@ -95,7 +94,7 @@ public class Glyph {
 
     private void parseBitmap(Scanner scanner) {
         if (height == 0 || width == 0) {
-            throw new InvalidStateException("Bitmap declared, but no dimensions defined");
+            throw new RuntimeException("Bitmap declared, but no dimensions defined");
         }
 
         binaryMap = new BinaryMap(width, height);

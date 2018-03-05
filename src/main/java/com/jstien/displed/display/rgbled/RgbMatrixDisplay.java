@@ -63,7 +63,8 @@ public class RgbMatrixDisplay implements IDisplay {
 
     @Override
     public void setPixel(int x, int y, int r, int g, int b) {
-        nativeInterface.led_canvas_set_pixel(canvas, x, y, (char)r, (char)g, (char)b);
+        if (x >= 0 && x < width && y >= 0 && y < height)
+            nativeInterface.led_canvas_set_pixel(canvas, x, y, (char)r, (char)g, (char)b);
     }
 
     @Override

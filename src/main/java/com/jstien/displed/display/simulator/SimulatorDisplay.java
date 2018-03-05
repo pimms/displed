@@ -2,6 +2,8 @@ package com.jstien.displed.display.simulator;
 
 import com.jstien.displed.display.Configuration;
 import com.jstien.displed.display.IDisplay;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,6 +12,7 @@ import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 
 public class SimulatorDisplay implements IDisplay {
+    private static final Logger LOG = LogManager.getLogger(SimulatorDisplay.class);
     private static final int SCALE = 10;
 
     private JFrame frame;
@@ -58,7 +61,8 @@ public class SimulatorDisplay implements IDisplay {
 
     @Override
     public void setPixel(int x, int y, Color color) {
-        image.setRGB(x, y, color.getRGB());
+        if (x >= 0 && x < getWidth() && y >= 0 && y < getHeight())
+            image.setRGB(x, y, color.getRGB());
     }
 
     @Override
@@ -90,10 +94,11 @@ public class SimulatorDisplay implements IDisplay {
     @Override
     public void close() {
         if (frame != null) {
+            LOG.debug("Closing SimulatorDisplay...");
             frame.setVisible(false);
-            frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
             frame.dispose();
             frame = null;
+            LOG.debug("Closing SimulatorDisplay...");
         }
     }
 }

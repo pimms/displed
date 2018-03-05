@@ -50,4 +50,21 @@ public class BDFFontTests {
         Assert.assertEquals(1, flagged.get(3).getFirst());
         Assert.assertEquals(4, flagged.get(3).getSecond());
     }
+
+    @Test
+    public void letterABoundariesReadCorrectly() throws Exception {
+        BDFFont font = new BDFFont("4x6.bdf");
+        Glyph glyph = font.getGlyph('a');
+        Assert.assertEquals("a", glyph.getName());
+        Assert.assertEquals("a".codePointAt(0), glyph.getCodePoint());
+
+        Assert.assertEquals(4, glyph.getWidth());
+        Assert.assertEquals(6, glyph.getHeight());
+
+        Assert.assertEquals(4, glyph.getDeviceWidth());
+        Assert.assertEquals(0, glyph.getDeviceHeight());
+
+        Assert.assertEquals(0, glyph.getxOffset());
+        Assert.assertEquals(-1, glyph.getyOffset());
+    }
 }
