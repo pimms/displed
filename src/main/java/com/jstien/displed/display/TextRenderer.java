@@ -7,12 +7,12 @@ import com.jstien.displed.font.Glyph;
 import java.awt.*;
 
 public class TextRenderer {
-    private IDisplay display;
+    private ICanvas display;
     private BDFFont font;
     private Color textColor;
 
-    public TextRenderer(IDisplay display, BDFFont font) {
-        this.display = display;
+    public TextRenderer(ICanvas canvas, BDFFont font) {
+        this.display = canvas;
         this.font = font;
         this.textColor = Color.white;
     }

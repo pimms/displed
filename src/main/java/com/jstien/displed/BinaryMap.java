@@ -1,9 +1,12 @@
 package com.jstien.displed;
 
+import com.jstien.displed.display.ICanvas;
+
+import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 
-public class BinaryMap {
+public class BinaryMap implements ICanvas {
     private int width;
     private int height;
     private boolean[] map;
@@ -30,13 +33,27 @@ public class BinaryMap {
         this.map  = new boolean[width * height];
     }
 
+
+    @Override
+    public void setPixel(int x, int y, Color color) {
+        set(x, y, color.getRGB() != 0);
+    }
+
+    @Override
+    public void setPixel(int x, int y, int r, int g, int b) {
+        set(x, y, r != 0 && g != 0 && b != 0);
+    }
+
+    @Override
     public int getWidth() {
         return width;
     }
 
+    @Override
     public int getHeight() {
         return height;
     }
+
 
     public boolean get(int x, int y) {
         return map[getIndex(x, y)];

@@ -1,11 +1,13 @@
 package com.jstien.displed;
 
+import com.jstien.displed.display.ICanvas;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ByteMap {
+public class ByteMap implements ICanvas {
     private List<Pixel> pixels;
     private int width;
     private int height;
@@ -25,20 +27,34 @@ public class ByteMap {
         }
     }
 
-    public void addColor(int x, int y, Color c) {
+
+    @Override
+    public void setPixel(int x, int y, Color c) {
         int r = c.getRed();
         int g = c.getGreen();
         int b = c.getBlue();
-        addColor(x, y, r, g, b);
+        setPixel(x, y, r, g, b);
     }
 
-    public void addColor(int x, int y, int r, int g, int b) {
+    @Override
+    public void setPixel(int x, int y, int r, int g, int b) {
         getPixel(x, y).ifPresent(pixel -> {
             pixel.r = Math.min(pixel.r + r, 255);
             pixel.g = Math.min(pixel.g + g, 255);
             pixel.b = Math.min(pixel.b + b, 255);
         });
     }
+
+    @Override
+    public int getWidth() {
+        return width;
+    }
+
+    @Override
+    public int getHeight() {
+        return height;
+    }
+
 
     public Color getColor(int x, int y) {
         Pixel p = pixels.get(getIndex(x, y));

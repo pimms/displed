@@ -86,7 +86,7 @@ public class ParticleSystem {
                 float len = pos.distanceTo(coordX, coordY);
                 float amplitude = 1.f - len;
                 if (amplitude > 0.f) {
-                    map.addColor(coordX, coordY, (int)(128.f*amplitude), (int)(128.f*amplitude), (int)(128.f*amplitude));
+                    map.setPixel(coordX, coordY, (int)(128.f*amplitude), (int)(128.f*amplitude), (int)(128.f*amplitude));
                 }
             }
         }
