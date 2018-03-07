@@ -66,30 +66,25 @@ public class Main {
             ParticleSystem system = new ParticleSystem(display);
 
             BinaryMap map = new BinaryMap(64, 32);
-            for (int y=0; y<32; y++)
-                for (int x=0; x<64; x++)
-                    map.set(x, y, ((x/8)%2) != ((y/8)%2));
 
             system.transitionTo(map);
 
-            BDFFont font = new BDFFont("5x7.bdf");
-            TextRenderer textRenderer = new TextRenderer(display, font);
+            BDFFont font = new BDFFont("7x14.bdf");
+            TextRenderer textRenderer = new TextRenderer(map, font);
             textRenderer.setTextColor(Color.red);
 
-            int n = 0;
+            int counter = 100;
             while (!exiting) {
                 system.update();
                 system.render();
 
                 if (system.isEntirelyAtRest()) {
-                    LOG.info("AT REST! Inverting...");
-                    map.invert();
+                    map.clear();
+                    textRenderer.drawText(10, 8, Integer.toString(++counter));
                     system.transitionTo(map);
                 }
 
-                textRenderer.drawText((n % (display.getWidth()*2))-display.getWidth(), 0, "Hello, World!");
                 display.swapBuffers();
-                n++;
             }
         } catch (Exception ex) {
             LOG.error("Exception caught during application run", ex);

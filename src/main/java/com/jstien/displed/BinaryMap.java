@@ -62,6 +62,12 @@ public class BinaryMap implements ICanvas {
         return height;
     }
 
+    @Override
+    public void clear() {
+        for (int i=0; i<map.length; i++)
+            map[i] = false;
+    }
+
     public void invert() {
         for (int i=0; i<map.length; i++) {
             map[i] = !map[i];

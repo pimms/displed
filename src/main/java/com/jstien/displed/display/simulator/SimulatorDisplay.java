@@ -92,6 +92,15 @@ public class SimulatorDisplay implements IDisplay {
     }
 
     @Override
+    public void clear() {
+        for (int y=0; y<getHeight(); y++) {
+            for (int x=0; x<getWidth(); x++) {
+                setPixel(x, y, Color.black);
+            }
+        }
+    }
+
+    @Override
     public void close() {
         if (frame != null) {
             LOG.debug("Closing SimulatorDisplay...");

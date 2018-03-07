@@ -55,6 +55,13 @@ public class ByteMap implements ICanvas {
         return height;
     }
 
+    @Override
+    public void clear() {
+        for (Pixel p: pixels) {
+            p.r = p.g = p.b = 0;
+        }
+    }
+
 
     public Color getColor(int x, int y) {
         Pixel p = pixels.get(getIndex(x, y));

@@ -7,4 +7,5 @@ public interface ICanvas {
     void setPixel(int x, int y, int r, int g, int b);
     int getWidth();
     int getHeight();
+    void clear();
 }

@@ -83,6 +83,15 @@ public class RgbMatrixDisplay implements IDisplay {
     }
 
     @Override
+    public void clear() {
+        for (int y=0; y<getHeight(); y++) {
+            for (int x=0; x<getWidth(); x++) {
+                setPixel(x, y, Color.black);
+            }
+        }
+    }
+
+    @Override
     public void close() {
         if (!isNull(matrix)) {
             LOG.info("Properly closing RGB Display handle");
