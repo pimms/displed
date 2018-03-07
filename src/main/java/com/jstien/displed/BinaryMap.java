@@ -34,6 +34,14 @@ public class BinaryMap implements ICanvas {
     }
 
 
+    public BinaryMap clone() {
+        BinaryMap copy = new BinaryMap(width, height);
+        for (int i=0; i<map.length; i++) {
+            copy.map[i] = map[i];
+        }
+        return copy;
+    }
+
     @Override
     public void setPixel(int x, int y, Color color) {
         set(x, y, color.getRGB() != 0);
@@ -54,6 +62,11 @@ public class BinaryMap implements ICanvas {
         return height;
     }
 
+    public void invert() {
+        for (int i=0; i<map.length; i++) {
+            map[i] = !map[i];
+        }
+    }
 
     public boolean get(int x, int y) {
         return map[getIndex(x, y)];

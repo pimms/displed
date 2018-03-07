@@ -8,9 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class ParticleSystem {
+public class ParticleSystem implements IParticleFactory{
     private IDisplay display;
-
     private List<Particle> particles;
 
     public ParticleSystem(IDisplay display) {
@@ -19,18 +18,13 @@ public class ParticleSystem {
     }
 
     public void transitionTo(BinaryMap map) {
-        particles.clear();
-
-        map.getFlagged().forEach(pair -> {
-            Vector2 position = new Vector2(pair.getFirst(), pair.getSecond());
-            Particle particle = createNewParticle(position);
-            particles.add(particle);
-        });
+        ParticlePlanner planner = new ParticlePlanner(particles, this);
+        planner.transitionTo(map);
     }
 
     public void update() {
         for (Particle p : particles) {
-            p.moveToTarget(0.05f);
+            p.moveToTarget(0.5f);
         }
     }
 
@@ -47,10 +41,19 @@ public class ParticleSystem {
         }
     }
 
-    private Particle createNewParticle(Vector2 target) {
+
+    public boolean isEntirelyAtRest() {
+        for (Particle p: particles) {
+            if (!p.isAtRest())
+                return false;
+        }
+        return true;
+    }
+
+    @Override
+    public Particle createNewParticle() {
         Vector2 start = createPerimeterPosition();
         Particle part = new Particle(start.x, start.y);
-        part.setTarget(target);
         return part;
     }
 
@@ -93,3 +96,4 @@ public class ParticleSystem {
     }
 
 }
+

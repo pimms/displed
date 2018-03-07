@@ -80,6 +80,13 @@ public class Main {
             while (!exiting) {
                 system.update();
                 system.render();
+
+                if (system.isEntirelyAtRest()) {
+                    LOG.info("AT REST! Inverting...");
+                    map.invert();
+                    system.transitionTo(map);
+                }
+
                 textRenderer.drawText((n % (display.getWidth()*2))-display.getWidth(), 0, "Hello, World!");
                 display.swapBuffers();
                 n++;
